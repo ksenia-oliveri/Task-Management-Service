@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreRequest;
+use Http;
 use Illuminate\Http\Request;
 use App\Services\TaskService;
 
@@ -18,18 +19,33 @@ class TaskApiController extends Controller
     // Get all tasks by category
     public function index(Request $request)
     {
-        return response($this->taskService->getTasksByCategory($request->input('category')), 200);
+        return response()->json($this->taskService->getTasksByCategory($request->input('category')), 200);
     }
 
     public function indexTasks()
-    {
-        return response($this->taskService->getAllTasks(), 200);
+    {   
+       return response()->json($this->taskService->getAllTasks(), 200);
     }
 
     // add a new task
 
     public function store(StoreRequest $request)
-    {
-        return response($this->taskService->addNewTask($request->validated()), 201);
+    {   
+        $users = Http::get('http://localhost:8001/api/v1/users')->json();
+        
+        foreach($users as $user)
+        {
+            if($request->user_id == $user['id']){
+                return response()->json($this->taskService->addNewTask($request->validated()), 201);
+            } 
+        }   
+
+        foreach($users as $user)
+        {
+            if($request->user_id !== $user['id']){
+                return response('user with user_id ' . $request->user_id . ' doesnt exist', 404);
+            } 
+        }   
+
     }
 }
