@@ -17,12 +17,12 @@ class TaskApiController extends Controller
         $this->taskService = $service;
     }
     // Get all tasks by category
-    public function index(Request $request)
+    public function show(Request $request)
     {
         return response()->json($this->taskService->getTasksByCategory($request->input('category')), 200);
     }
 
-    public function indexTasks()
+    public function index()
     {   
        return response()->json($this->taskService->getAllTasks(), 200);
     }

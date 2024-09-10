@@ -6,7 +6,7 @@ use App\Models\Task;
 class TaskService
 {
     //get all tasks by category
-    public function getTasksByCategory($category)
+    public function getTasksByCategory(string $category)
     {
         return Task::join('categories', 'tasks.category_id', '=', 'categories.id')
         ->select('tasks.title', 'tasks.description', 'categories.name')
@@ -23,7 +23,7 @@ class TaskService
 
     //add new task
 
-    public function addNewTask($data)
+    public function addNewTask(array $data)
     {
         return Task::create($data);
     }
