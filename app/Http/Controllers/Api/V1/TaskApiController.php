@@ -7,15 +7,18 @@ use App\Http\Requests\StoreRequest;
 use Http;
 use Illuminate\Http\Request;
 use App\Services\TaskService;
+use App\Services\UserService;
 
 
 class TaskApiController extends Controller
 {   
     private TaskService $taskService;
+    private UserService $userService;
 
-    public function __construct(TaskService $service)
+    public function __construct(TaskService $taskService, UserService $userService)
     {
-        $this->taskService = $service;
+        $this->taskService = $taskService;
+        $this->userService = $userService;
     }
     // Get all tasks 
     public function index()
@@ -32,17 +35,25 @@ class TaskApiController extends Controller
 
     public function store(StoreRequest $request)
     {   
-        
+        // check if user exist using User-management-service
+        $userExists = $this->userService->checkUserExists($request->user_id);
 
+        if (!$userExists) {
+            return response()->json(['message' => 'Task can not be created. User not found'], 404);
+        }
+
+        return response($this->taskService->addNewTask($request->validated()), 201);
     }
 
     public function update(int $id, StoreRequest $request)
     {
-        return response($this->taskService->updateTask($id, $request->validated()), 200);
+        $this->taskService->updateTask($id, $request->validated());
+        return response()->json(['message' => 'task was succesefully updated'], 200);
     }
 
     public function destroy(int $id)
     {
-        return response($this->taskService->deleteTask($id), 204);
+        $this->taskService->deleteTask($id);
+        return response()->json(['message' => 'task was succesefully deleted'], 200);
     }
 }
