@@ -21,7 +21,6 @@ use Illuminate\Database\Eloquent\Model;
 class Task extends Model
 {
     use HasFactory;
-    use HasUuids;
 
     protected $table = 'tasks';
     protected $guarded = false;
