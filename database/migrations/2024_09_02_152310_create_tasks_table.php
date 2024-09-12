@@ -16,12 +16,11 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('title');
             $table->text('description');
-            $table->unsignedBigInteger('category_id')->nullable();
+            $table->foreignId('category_id')->constrained();
             $table->integer('status');
             $table->timestamps();
+            
 
-            $table->index('category_id', 'task_category_idx');
-            $table->foreign('category_id', 'task_category_fk')->references('id')->on('categories');
 
         });
     }
@@ -31,6 +30,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tasks');
+        Schema::table('tasks', function (Blueprint $table) {
+            $table->dropConstrainedForeignId('category_id');
+            $table->drop();
+        });
     }
 };
