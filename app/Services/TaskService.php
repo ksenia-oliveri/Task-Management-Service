@@ -23,8 +23,21 @@ class TaskService
 
     //add new task
 
-    public function addNewTask(array $data)
+    public function addNewTask(array $task)
     {
-        return Task::create($data);
+        return Task::create($task);
+    }
+
+    //update the task 
+
+    public function updateTask(int $id, array $task)
+    {
+        return Task::find($id)->update($task);
+    }
+
+    //delete the task
+    public function deleteTask(int $id)
+    {
+        return Task::destroy($id);
     }
 }
