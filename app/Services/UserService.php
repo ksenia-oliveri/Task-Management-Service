@@ -1,17 +1,16 @@
 <?php 
 
 namespace App\Services;
-use Cache;
-use Http;
 
+use Http;
 
 class UserService
 {
    
-    public function checkUserExists($userId)
+    public function checkUserExists($userId): bool
     {
-        //$response = Http::get("http://localhost:8001/api/users/{$userId}");
-        return Cache::get('users:' . $userId);
+        $response = Http::get("http://localhost:8000/api/users/{$userId}");
 
+        return $response->status() == 200;
     }
 }
