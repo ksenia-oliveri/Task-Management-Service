@@ -11,9 +11,9 @@ class UserCreatedListener
      * Handle the event.
      */
     public function handle(UserCreated $event): void
-    {
-       $user = $event->user;
-       Cache::put('users:' . $user['id'],  $user);
-
+    {   
+        $user = $event->user;
+        // Update the user cache with the new user data
+       Cache::put('user:' . $user['id'], $user, 3600);    
     }
 }
